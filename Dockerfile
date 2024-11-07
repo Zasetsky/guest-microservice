@@ -6,14 +6,13 @@ RUN apt-get update && apt-get install -y \
 	zip unzip \
 	&& docker-php-ext-install pdo pdo_pgsql bcmath
 
-# Установка Composer
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
-# Генерация ключа приложения
+
 RUN php artisan key:generate
